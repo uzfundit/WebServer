@@ -4,9 +4,9 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
+//http://shiningglowingshinymagic.neverssl.com
 public class HttpClient {
-    private static final String HOST_URL = "http://silversplendidinnerplay.neverssl.com";
+    private static final String HOST_URL = "127.0.0.1";
     public static void main(String[] args) throws IOException {
         HttpClient client = new HttpClient();
         HttpRequest request = new HttpRequest();
@@ -14,14 +14,14 @@ public class HttpClient {
         request.setMethod("GET");
 
         Map<String, String> header = new HashMap<>();
-        header.put("Host", "silversplendidinnerplay.neverssl.com");
+        header.put("Host", "http://shiningglowingshinymagic.neverssl.com");
         header.put("Accept","text/html");
         header.put("Language", "en-US");
         request.setHeaders(header);
-        request.setBody("I am sending request message".getBytes(StandardCharsets.UTF_8));
+        request.setBody("Can you send me your phone number ?\r\n".getBytes(StandardCharsets.UTF_8));
         HttpResponse httpResponse = client.sendRequest(request);
 
-        System.out.println(httpResponse);
+        System.out.println(httpResponse.toString());
     }
 
     HttpResponse sendRequest(HttpRequest request) throws IOException {
@@ -59,7 +59,6 @@ public class HttpClient {
 
         while(bodyLine != null && !bodyLine.isEmpty()) {
             body.append(bodyLine);
-            body.append("\n");
             bodyLine = bufferedReader.readLine();
         }
         return body.toString();
@@ -83,43 +82,51 @@ public class HttpClient {
                 headerLine.append(":");
             }
 
-            headers.put(splittedHeader[0].trim(), headerLine.toString().trim());
+            headers.put(splittedHeader[0], headerLine.toString());
             header = bufferedReader.readLine();
         }
+
         return headers;
     }
 
     private static void readStatusLine(HttpResponse httpResponse, BufferedReader bufferedReader) throws IOException {
         String responseStatusLine = bufferedReader.readLine();
+        if(responseStatusLine != null) {
+            String[] arr = responseStatusLine.split(" ");
+            if(arr.length < 3) {
+                throw new IllegalArgumentException("Invalid HTTP response statusLine: " + responseStatusLine);
+            }
 
-        String[] arr = responseStatusLine.split(" ");
-        //HTTP/1.1 200 OK
-        if(arr.length < 3) {
-            throw new IllegalArgumentException("Invalid HTTP response statusLine: " + responseStatusLine);
+            httpResponse.setStatusCode(Integer.parseInt(arr[1]));
+            StringBuilder statusMessage = new StringBuilder();
+
+            for(int i = 2; i < arr.length; i++) {
+                statusMessage.append(arr[i]);
+                statusMessage.append(" ");
+            }
+
+            httpResponse.setStatusMessage(statusMessage.toString());
         }
-
-        httpResponse.setStatusCode(Integer.parseInt(arr[1]));
-        StringBuilder statusMessage = new StringBuilder();
-
-        for(int i = 2; i < arr.length; i++) {
-            statusMessage.append(arr[i]);
-        }
-
-        httpResponse.setStatusMessage(statusMessage.toString());
     }
 
     private static void sendRequest(HttpRequest request, OutputStream outputStream) throws IOException {
-        String requestLine = "";
-        outputStream.write(requestLine.getBytes(StandardCharsets.UTF_8));
+        StringBuilder requestLine = new StringBuilder();
+        requestLine.append(request.getMethod());
+        requestLine.append(" / HTTP/1.1\r\n");
+        outputStream.write(requestLine.toString().getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder headers = new StringBuilder();
 
         for(Map.Entry<String, String> header : request.getHeaders().entrySet()) {
-            String line = header.getKey() + ": " + header.getValue() + "\r\n";
-            outputStream.write(line.getBytes(StandardCharsets.UTF_8));
+            headers.append(header.getKey());
+            headers.append(": ");
+            headers.append(header.getValue());
+            headers.append("\r\n");
         }
-
+        outputStream.write(headers.toString().getBytes(StandardCharsets.UTF_8));
+        //outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
+        //outputStream.write(request.getBody());
         outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
-
-        outputStream.write(request.getBody());
         outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
     }

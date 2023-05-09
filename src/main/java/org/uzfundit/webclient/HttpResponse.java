@@ -1,7 +1,6 @@
 package org.uzfundit.webclient;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class HttpResponse {
@@ -44,11 +43,11 @@ public class HttpResponse {
 
     @Override
     public String toString() {
-        return "HttpResponse{" +
-                "statusCode=" + statusCode +
-                ", statusMessage='" + statusMessage + '\'' +
-                ", headers=" + headers +
-                ", body=" + Arrays.toString(body) +
+        return "HttpResponse: \n" +
+                "StatusCode=" + statusCode +
+                ", StatusMessage='" + statusMessage + '\'' +
+                "\nHeaders =" + headers +
+                "\nBody=" + Arrays.toString(body) +
                 '}';
     }
 }
