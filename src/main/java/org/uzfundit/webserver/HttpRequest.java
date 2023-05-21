@@ -1,52 +1,63 @@
 package org.uzfundit.webserver;
 
+import java.awt.image.AreaAveragingScaleFilter;
+import java.util.Arrays;
 import java.util.Map;
 
 public class HttpRequest {
-    private String hostURL;
+    private String requestURI;
+    private String httpVersion;
     private String method;
-    private Map<String, String> header;
+    private Map<String, String> headers;
     private byte[] body;
 
-    public String getHostURL() {
-        return hostURL;
+    public String getRequestURI() {
+        return this.requestURI;
     }
 
-    public void setHostURL(String hostURL) {
-        this.hostURL = hostURL;
+    public void setRequestURI(String requestURI) {
+        this.requestURI = requestURI;
     }
 
     public String getMethod() {
-        return method;
+        return this.method;
     }
 
     public void setMethod(String method) {
         this.method = method;
     }
 
-    public Map<String, String> getHeader() {
-        return header;
+    public Map<String, String> getHeaders() {
+        return this.headers;
     }
 
-    public void setHeader(Map<String, String> header) {
-        this.header = header;
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
     }
 
     public byte[] getBody() {
-        return body;
+        return this.body;
     }
 
     public void setBody(byte[] body) {
         this.body = body;
     }
 
-//    @Override
-//    public String toString() {
-//        return "HttpClientRequest{" +
-//                "hostURL='" + hostURL + '\'' +
-//                ", method='" + method + '\'' +
-//                ", header=" + header +
-//                ", body=" + Arrays.toString(body) +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "HttpRequest:\n" +
+                "Method = '" + method + '\'' + "\n" +
+                "Reqeust URI = '" + requestURI + '\'' + "\n" +
+                "Http Version = '" + httpVersion + '\'' + "\n" +
+                "Headers = " + headers + "\n" +
+                "Body = " + Arrays.toString(body);
+    }
+
+    public void setHttpVersion(String httpVersion) {
+        this.httpVersion = httpVersion;
+    }
+
+    public String getHttpVersion() {
+        return this.httpVersion;
+    }
 }

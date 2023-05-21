@@ -1,12 +1,13 @@
 package org.uzfundit.webserver;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponse {
     private int statusCode;
     private String statusMessage;
-    private Map<String, String> headers;
+    private Map<String, String> headers = new HashMap<>();
     private byte[] body;
 
     public int getStatusCode() {
@@ -49,5 +50,9 @@ public class HttpResponse {
                 ", headers=" + headers +
                 ", body=" + Arrays.toString(body) +
                 '}';
+    }
+
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
     }
 }

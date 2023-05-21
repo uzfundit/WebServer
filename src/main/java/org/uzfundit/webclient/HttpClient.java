@@ -14,18 +14,20 @@ public class HttpClient {
         request.setMethod("GET");
 
         Map<String, String> header = new HashMap<>();
-        header.put("Host", "http://shiningglowingshinymagic.neverssl.com");
+        header.put("Host", "localhost:80");
         header.put("Accept","text/html");
         header.put("Language", "en-US");
-        request.setHeaders(header);
+
         request.setBody("Can you send me your phone number ?\r\n".getBytes(StandardCharsets.UTF_8));
+        header.put("Content-Length", String.valueOf(request.getBody().toString().length()));
+        request.setHeaders(header);
         HttpResponse httpResponse = client.sendRequest(request);
 
         System.out.println(httpResponse.toString());
     }
 
     HttpResponse sendRequest(HttpRequest request) throws IOException {
-        Socket clientSocket = new Socket(HOST_URL, 80);
+        Socket clientSocket = new Socket(HOST_URL, 8001);
 
         InputStream inputStream = clientSocket.getInputStream();
         OutputStream outputStream = clientSocket.getOutputStream();
@@ -79,7 +81,9 @@ public class HttpClient {
 
             for(int i = 1; i < splittedHeader.length; i++) {
                 headerLine.append(splittedHeader[i]);
-                headerLine.append(":");
+                if (i < splittedHeader.length - 1) {
+                    headerLine.append(":");
+                }
             }
 
             headers.put(splittedHeader[0], headerLine.toString());
@@ -121,12 +125,13 @@ public class HttpClient {
             headers.append(header.getKey());
             headers.append(": ");
             headers.append(header.getValue());
-            headers.append("\r\n");
+            outputStream.write(headers.toString().getBytes(StandardCharsets.UTF_8));
+            outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            headers = new StringBuilder();
         }
-        outputStream.write(headers.toString().getBytes(StandardCharsets.UTF_8));
-        //outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
-        //outputStream.write(request.getBody());
+
         outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
+        outputStream.write(request.getBody());
         outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
     }

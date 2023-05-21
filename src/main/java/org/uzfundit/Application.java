@@ -14,8 +14,14 @@ public class Application implements WebServerClient {
         HttpResponse httpResponse = new HttpResponse();
         httpResponse.setStatusCode(200);
         httpResponse.setStatusMessage("Ok");
-
-        String message = "My phone number";
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Server", "nginx/1.23.3");
+        headers.put("Date", "Mon, 01 May 2023 05:36:59 GMT");
+        headers.put("Content-Type", "text/html; charset=UTF-8");
+        headers.put("Connection", "close");
+        headers.put("Cache-control", "no-cache, private");
+        httpResponse.setHeaders(headers);
+        String message = "My phone number: +998908991199";
         httpResponse.setBody(message.getBytes(StandardCharsets.UTF_8));
 
         return httpResponse;

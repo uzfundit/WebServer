@@ -44,10 +44,10 @@ public class HttpResponse {
     @Override
     public String toString() {
         return "HttpResponse: \n" +
-                "StatusCode=" + statusCode +
-                ", StatusMessage='" + statusMessage + '\'' +
-                "\nHeaders =" + headers +
-                "\nBody=" + Arrays.toString(body) +
+                "Status Code = " + statusCode +
+                ", Status Message = ' " + statusMessage + '\'' +
+                "\nHeaders = " + headers +
+                "\nBody = " + Arrays.toString(body) +
                 '}';
     }
 }
