@@ -1,2 +1,2 @@
 # WebServer
-WebServer implementation
+WebServer implementation which accepts and responses HTTP requests
