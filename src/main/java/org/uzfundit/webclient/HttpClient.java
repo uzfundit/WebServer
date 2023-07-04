@@ -17,7 +17,6 @@ public class HttpClient {
         header.put("Host", "localhost:80");
         header.put("Accept","text/html");
         header.put("Language", "en-US");
-
         request.setBody("Can you send me your phone number ?\r\n".getBytes(StandardCharsets.UTF_8));
         header.put("Content-Length", String.valueOf(request.getBody().toString().length()));
         request.setHeaders(header);
